@@ -21,17 +21,59 @@ public class MyInputController : MonoBevaiour {
   // Не забудьте назначить сюда ту же шину, что вы указывали для InputController!
   [SerializeField]
   private InputService _inputService;
-  
+
+  // Ваш класс, куда нужно передать команду
+  private MyCharacterClass _character;
+
   // И при вызове Start однократно подписать нужные методы-обработчики на `InputActions`
   private void Start() {
+    _character = GetComponent<MyCharacterClass>();
+
+    // Подписываем методы Move и Sprint в _character на InputAction с названиями Move и Sprint
     _inputService
-                .Subscribe(_motor.Move)
-                .Subscribe(_motor.Crouch)
-                .Subscribe(_motor.Sprint)
-                .Subscribe(Look)
-                .Subscribe(_weaponController.Aim)
-                .Subscribe(_weaponController.Fire);
+                .Subscribe(_character.Move)
+                .Subscribe(_character.Sprint);
   }
+}
+```
+
+А примерно так может выглядеть класс, который должен работать с инпутом:
+
+```csharp
+using UnityEngine.InputSystem;
+
+public class MyCharacterClass : MonoBehaviour {
+    /// <summary>
+    /// Считать команду на "перемещение"
+    /// </summary>
+    public void Move(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            var moveInput = context.ReadValue<Vector2>();
+
+            // Передать системе персонажа, что игрок хочет двигаться в указанном направлении
+        }
+        else if (context.canceled)
+        {
+            // Передать системе персонажа, что игрок хочет остановиться
+        }
+    }
+
+    /// <summary>
+    /// Считать команду на спринт
+    /// </summary>
+    public void Sprint(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            // Передать системе персонажа, что можно начать спринт
+        }
+        else if (context.canceled)
+        {
+            // Передать системе персонажа, что нужно завершить спринт
+        }
+    }
 }
 ```
 
