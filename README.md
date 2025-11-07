@@ -15,7 +15,7 @@
 * Вставьте **URL этого репозитория** (можно скопировать ниже) и нажмите **Install**;
 
 ```
-https://github.com/madeyellow/AnimatorParameters.git
+https://github.com/madeyellow/InputBus.git
 ```
 
 # 🚀 Начало работы
