@@ -10,25 +10,6 @@ namespace MadeYellow.InputBus
     public interface IInputBus
     {
         /// <summary>
-        /// Добавить метод, который должен быть выполнен при срабатывании определённого <see cref="InputAction"/>. Ожидается, что название <see cref="InputAction"/> будет таким же, как называется этот метод
-        /// </summary>
-        /// <param name="callback">Метод-обработчик <see cref="InputAction"/></param>
-        /// <returns>
-        /// Возвращает эту шину, чтобы выстраивать цепочку вызовов
-        /// </returns>
-        InputService Subscribe(Action<CallbackContext> callback);
-
-        /// <summary>
-        /// Добавить метод, который должен быть выполнен при срабатывании определённого <see cref="InputAction"/>
-        /// </summary>
-        /// <param name="inputAction">При срабатывании этого <see cref="InputAction"/> данные будут маршрутизированы в предоставленный вами метода</param>
-        /// <param name="callback">Метод-обработчик <see cref="InputAction"/></param>
-        /// <returns>
-        /// Возвращает эту шину, чтобы выстраивать цепочку вызовов
-        /// </returns>
-        InputService Subscribe(InputAction inputAction, Action<CallbackContext> callback);
-
-        /// <summary>
         /// Добавить метод, который должен быть выполнен при срабатывании определённого <see cref="InputAction"/>. Ожидается, что это будет <see cref="InputAction"/> с указанным названием
         /// </summary>
         /// <param name="inputActionName">Название <see cref="InputAction"/>, при срабатывании которого нужно вызвать функцию-обработчик</param>

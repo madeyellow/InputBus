@@ -124,16 +124,6 @@ namespace MadeYellow.InputBus
         }
 
 #region API
-        public InputService Subscribe(Action<CallbackContext> callback)
-        {
-            return SubscribeHandle(callback.Method.Name, callback);
-        }
-        
-        public InputService Subscribe(InputAction inputAction, Action<CallbackContext> callback)
-        {
-            return SubscribeHandle(inputAction.name, callback);
-        }
-        
         public InputService Subscribe(string inputActionName, Action<CallbackContext> callback)
         {
             return SubscribeHandle(inputActionName, callback);
