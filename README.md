@@ -10,6 +10,25 @@
 
 Готово! Система автоматически маршрутизирует вызываемые игроком `InputAction` к нужным методам - вам остаётся их только реализовать.
 
+```csharp
+using MadeYellow.InputBus;
+
+// Это нужно добавить внутрь вашего MonoBehaviour где вы будете принимать инпут
+[SerializeField]
+private InputService _inputService;
+
+// И при вызове Start однократно подписать нужные методы-обработчики на `InputActions`
+private void Start() {
+  _inputService
+              .Subscribe(_motor.Move)
+              .Subscribe(_motor.Crouch)
+              .Subscribe(_motor.Sprint)
+              .Subscribe(Look)
+              .Subscribe(_weaponController.Aim)
+              .Subscribe(_weaponController.Fire);
+}
+```
+
 # 💾 Установка
 * Откройте **Unity Package Manager** (Window > Package Manager) ИЛИ (Window > Package Management > Package Manager) для **Unity 6**;
 * Нажмите "+" → "Add package from git URL";
