@@ -1,32 +1,34 @@
-# ❓ What is it?
-Leverage invocation of **C# events** from `PlayerInput` without pain and boilerplate code!
+# ❓ Что это такое?
+Используйте **C# event** из `PlayerInput` в Unity без лишнего кода и хлопот.
 
-This package gives you the "service" that acts like an **event-bus** for `InputActions` from `PlayerInput`:
-*	Just drop a pre-built component where your `PlayerInput` component is & assign a reference to special `InputSerivce` in the editor;
-*	Register a method that should be executed when a certain `InputAction` happens with 2 lines of code in your class where you typically handle the input;
+Этот пакет реализует подобие "шины", слушая происходящие в `PlayerInput` действия `InputAction` и маршрутизирует их к нужным игровым методам!
 
-Simple as that!
+*	Добавьте к GameObject, в котором расположен `PlayerInput` готовый компонент, назначьте в редакторе `InputSerivce`, который идёт в комплекте;
+*	Зарегистрируйте игровые методы, которые должны срабатывать при определённых командах от игрока, при помощи все пары строк кода;
 
-# 💾 Installation
-* Open **Unity Package Manager** (Window > Package Manager) OR (Window > Package Management > Package Manager) in **Unity 6**;
-* Click "+" → "Add package from git URL";
-* Paste this **repo's URL**;
-* Hit **Install**;
+Вот и всё! Дальше пакет автоматически маршрутизирует вызываемые игроком `InputAction` к нужным методам - вам остаётся их только реализовать.
 
-# 🚀 Getting started
-## Step 1
+
+# 💾 Установка
+* Откройте **Unity Package Manager** (Window > Package Manager) ИЛИ (Window > Package Management > Package Manager) для **Unity 6**;
+* Нажмите "+" → "Add package from git URL";
+* Вставьте **URL этого репозитория** (можно скопировать ниже) и нажмите **Install**;
+
+```
+https://github.com/madeyellow/AnimatorParameters.git
+```
+
+# 🚀 Начало работы
+## Шаг 1
 ToDo
 
-## 🎯 Full Usage Example
-ToDo
-
-# ⚡ Why You’ll Love It
+# ⚡ Почему вам это понравится
 ToDo
 
 # 🗺️ Roadmap
-## Planned features
+## Запланированные функции
 ToDo
 
-# 🐞 Want me to add something OR found a bug?
+# 🐞 Нашли баг или хотите запросить какой-то функционал?
 
-Please add an issue and describe your feature request or bug. I will add a feature if consider it usefull, and for sure will fix bugs, 'cause I'm using that package myself in my games.
+Создайте **Issue** и опишите баг/функционал. Я постараюсь добавить его, если он будет полезен этому пакету.
