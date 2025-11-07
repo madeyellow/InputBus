@@ -1,5 +1,11 @@
 # ❓ What is it?
-ToDo
+Leverage invocation of **C# events** from `PlayerInput` without pain and boilerplate code!
+
+This package gives you the "service" that acts like a event-bus for input actions:
+*	Just drop a pre-built component where your `PlayerInput` component is & assign a reference to special `InputSerivce` in the editor;
+*	Register a method that should be executed when a certain `InputAction` happens with 2 lines of code in your class where you typically handle the input;
+
+Simple as that!
 
 # 💾 Installation
 * Open **Unity Package Manager** (Window > Package Manager) OR (Window > Package Management > Package Manager) in **Unity 6**;
