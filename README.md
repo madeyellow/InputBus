@@ -8,24 +8,30 @@
 *	Переведите `PlayerInput` в режим **Invoke C# Events**; 
 *	Зарегистрируйте игровые методы, которые должны срабатывать при определённых командах от игрока (пара строк кода);
 
-Готово! Система автоматически маршрутизирует вызываемые игроком `InputAction` к нужным методам - вам остаётся их только реализовать.
+![Установка компонентов системы. Просто добавьте компонент InputController к тому GameObject где уже имеется PlayerInput](https://github.com/madeyellow/InputBus/blob/main/Samples/how-to-set-components.jpg)
+
+Готово! Система автоматически маршрутизирует вызываемые игроком `InputAction` к нужным методам - вам остаётся их только реализовать. Добавить методы к маршрутизации можно следующим образом:
 
 ```csharp
+// Это нужно добавить внутрь вашего MonoBehaviour где вы будете принимать инпут
+
 using MadeYellow.InputBus;
 
-// Это нужно добавить внутрь вашего MonoBehaviour где вы будете принимать инпут
-[SerializeField]
-private InputService _inputService;
-
-// И при вызове Start однократно подписать нужные методы-обработчики на `InputActions`
-private void Start() {
-  _inputService
-              .Subscribe(_motor.Move)
-              .Subscribe(_motor.Crouch)
-              .Subscribe(_motor.Sprint)
-              .Subscribe(Look)
-              .Subscribe(_weaponController.Aim)
-              .Subscribe(_weaponController.Fire);
+public class MyInputController : MonoBevaiour {
+  // Не забудьте назначить сюда ту же шину, что вы указывали для InputController!
+  [SerializeField]
+  private InputService _inputService;
+  
+  // И при вызове Start однократно подписать нужные методы-обработчики на `InputActions`
+  private void Start() {
+    _inputService
+                .Subscribe(_motor.Move)
+                .Subscribe(_motor.Crouch)
+                .Subscribe(_motor.Sprint)
+                .Subscribe(Look)
+                .Subscribe(_weaponController.Aim)
+                .Subscribe(_weaponController.Fire);
+  }
 }
 ```
 
