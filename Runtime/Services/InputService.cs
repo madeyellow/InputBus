@@ -4,8 +4,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
+using MadeYellow.InputBus.Services.Abstractions;
 
-namespace MadeYellow.InputBus
+namespace MadeYellow.InputBus.Services
 {
     /// <summary>
     /// Сервис-шина, которая выполняет маршрутизацию <see cref="InputAction"/> к зарегистрированным для них методам-обработчикам

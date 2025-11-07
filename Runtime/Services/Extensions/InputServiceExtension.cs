@@ -2,7 +2,7 @@ using System;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
-namespace MadeYellow.InputBus
+namespace MadeYellow.InputBus.Services
 {
     public static class InputServiceExtension
     {

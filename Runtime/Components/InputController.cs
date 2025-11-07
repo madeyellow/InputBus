@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using MadeYellow.InputBus.Services;
 
-namespace MadeYellow.InputBus
+namespace MadeYellow.InputBus.Components
 {
     /// <summary>
     /// Этот компонент обрабатывает ввод <see cref="InputAction"/> от пользователя (через <see cref="PlayerInput"/>) и маршрутизирует его в зарегистрированные функции (через InputService)
