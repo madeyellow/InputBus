@@ -123,7 +123,7 @@ namespace MadeYellow.InputBus.Services
             }
 
             // Если схема не изменилась - не публикуем событие
-            if (CurrentScheme != null && !CurrentScheme .Equals(newScheme))
+            if (CurrentScheme != null && CurrentScheme.Equals(newScheme))
                 return;
 
             // Запоминаем новую схему и публикуем событие
@@ -139,7 +139,7 @@ namespace MadeYellow.InputBus.Services
         {
             foreach (var scheme in InputSchemes)
             {
-                if (scheme.name.Equals(schemeName))
+                if (scheme.Scheme.name.Equals(schemeName))
                     return scheme;
             }
 
@@ -165,15 +165,17 @@ namespace MadeYellow.InputBus.Services
 
         public void AddScheme(InputScheme inputScheme)
         {
+            Debug.Log($"Добавляем схему '{inputScheme.Scheme.name}'...");
+            
             if (_inputSchemes.Contains(inputScheme))
                 return;
             
             _inputSchemes.Add(inputScheme);
         }
 
-        public void RemoveScheme(InputScheme inputScheme)
+        public void ClearSchemes()
         {
-            _inputSchemes.Remove(inputScheme);
+            _inputSchemes.Clear();
         }
 #endregion
 

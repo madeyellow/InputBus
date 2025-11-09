@@ -15,7 +15,7 @@ namespace MadeYellow.InputBus.Schemes
     /// </summary>
     public class InputScheme : ScriptableObject, IEquatable<InputScheme>, IEquatable<InputControlScheme>
     {
-        public InputControlScheme Scheme { get; private set; }
+        public InputControlScheme Scheme;
 
 #if UNITY_EDITOR
         public static void Build(InputControlScheme scheme)
@@ -60,7 +60,7 @@ namespace MadeYellow.InputBus.Schemes
             if (other == null)
                return false;
 
-            return other.Scheme.Equals(Scheme);
+            return other.Equals(Scheme);
         }
         
         public bool Equals(InputControlScheme other)

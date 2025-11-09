@@ -63,7 +63,7 @@ namespace MadeYellow.InputBus.Services
             {
                 mappings = new List<InputRouterMap>(SchemesCount + 1);
                 
-                _map[inputAction] = mappings;
+                _map.Add(inputAction, mappings);
             }
 
             // Для каждой предоставленной схемы (или для её отсутствия) - добавить callback в маппинг

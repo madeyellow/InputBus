@@ -56,6 +56,7 @@ namespace MadeYellow.InputBus.Components
             
             foreach (var scheme in _playerInput.actions.controlSchemes)
             {
+                Debug.Log($"Обработка схемы '{scheme.name}'...");
                 InputScheme.Build(scheme);
             }
         }
@@ -74,6 +75,8 @@ namespace MadeYellow.InputBus.Components
             // Создаем схемы
             BuildSchemes();
 
+            _inputService.ClearSchemes();
+            
             // Загружаем все созданные InputScheme ассеты и добавляем их в сервис
             string[] guids = AssetDatabase.FindAssets("t:InputScheme");
             foreach (string guid in guids)
