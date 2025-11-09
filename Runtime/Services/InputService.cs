@@ -29,18 +29,17 @@ namespace MadeYellow.InputBus.Services
         private bool _showSchemeNotFoundWarnings = true;
 #endif
 
-        private List<InputScheme> _inputSchemes = new();
+        /// <summary>
+        /// Схемы управления
+        /// </summary>
         public IReadOnlyCollection<InputScheme> InputSchemes => _inputSchemes;
+        [SerializeField]
+        private List<InputScheme> _inputSchemes = new();
         
         /// <summary>
         /// Текущая схема управления в <see cref="PlayerInput"/>
         /// </summary>
-        public InputControlScheme CurrentScheme { get; private set; }
-
-        /// <summary>
-        /// Коллекция всех схем управления. Доступна после вызова <see cref="Initilize"/>
-        /// </summary>
-        public IReadOnlyCollection<InputControlScheme> Schemes { get; private set; }
+        public InputScheme CurrentScheme { get; private set; }
 
         /// <summary>
         /// Карта маршрутизации <see cref="InputAction"/> к методам
@@ -56,8 +55,6 @@ namespace MadeYellow.InputBus.Services
         /// Контроллер инута, для которого инициализирована эта шина
         /// </summary>
         private PlayerInput _playerInput;
-
-        // public InputScheme CurrentScheme { get; private set; }
 #region События
 
         /// <summary>
@@ -66,7 +63,7 @@ namespace MadeYellow.InputBus.Services
         /// <remarks>
         /// В качестве аргумента указывается какая именно схема была выбрана
         /// </remarks>
-        public event Action<InputControlScheme> OnSchemeChanged;
+        public event Action<InputScheme> OnSchemeChanged;
 
 #endregion
 
@@ -98,8 +95,6 @@ namespace MadeYellow.InputBus.Services
             // Подготовка карты маршрутизации
             _inputActionAsset = inputController.actions;
 
-            Schemes = _inputActionAsset.controlSchemes;
-
             _actionMap =
                 new Dictionary<InputAction, HashSet<Action<CallbackContext>>>(_inputActionAsset.Count());
 
@@ -128,11 +123,11 @@ namespace MadeYellow.InputBus.Services
             }
 
             // Если схема не изменилась - не публикуем событие
-            if (CurrentScheme == newScheme)
+            if (CurrentScheme != null && !CurrentScheme .Equals(newScheme))
                 return;
 
             // Запоминаем новую схему и публикуем событие
-            CurrentScheme = newScheme.Value;
+            CurrentScheme = newScheme;
 
             OnSchemeChanged?.Invoke(CurrentScheme);
         }
@@ -140,9 +135,9 @@ namespace MadeYellow.InputBus.Services
         /// <summary>
         /// Найти схему управления по её имени
         /// </summary>
-        private InputControlScheme? FindScheme(string schemeName)
+        private InputScheme FindScheme(string schemeName)
         {
-            foreach (var scheme in Schemes)
+            foreach (var scheme in InputSchemes)
             {
                 if (scheme.name.Equals(schemeName))
                     return scheme;

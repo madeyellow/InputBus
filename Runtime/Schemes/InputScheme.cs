@@ -13,7 +13,7 @@ namespace MadeYellow.InputBus.Schemes
     /// <summary>
     /// Обёртка над <see cref="InputControlScheme"/>, которую можно использовать в редакторе
     /// </summary>
-    public class InputScheme : ScriptableObject, IEquatable<InputScheme>
+    public class InputScheme : ScriptableObject, IEquatable<InputScheme>, IEquatable<InputControlScheme>
     {
         public InputControlScheme Scheme { get; private set; }
 
@@ -61,6 +61,11 @@ namespace MadeYellow.InputBus.Schemes
                return false;
 
             return other.Scheme.Equals(Scheme);
+        }
+        
+        public bool Equals(InputControlScheme other)
+        {
+            return other.Equals(Scheme);
         }
     }
 }

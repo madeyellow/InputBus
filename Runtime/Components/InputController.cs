@@ -41,7 +41,6 @@ namespace MadeYellow.InputBus.Components
         }
 
 #if UNITY_EDITOR
-        [ContextMenu("Create InputScheme Assets")]
         private void BuildSchemes()
         {
             _playerInput = GetComponent<PlayerInput>();
@@ -50,6 +49,40 @@ namespace MadeYellow.InputBus.Components
             {
                 InputScheme.Build(scheme);
             }
+        }
+
+        /// <summary>
+        /// Генерирует <see cref="InputScheme"/> ассеты и добавляет их в <see cref="InputService"/>
+        /// </summary>
+        public void GenerateInputSchemesAndAddToService()
+        {
+            if (_inputService == null)
+            {
+                Debug.LogError("InputService не назначен! Назначьте InputService в инспекторе.");
+                return;
+            }
+
+            // Создаем схемы
+            BuildSchemes();
+
+            // Загружаем все созданные InputScheme ассеты и добавляем их в сервис
+            string[] guids = AssetDatabase.FindAssets("t:InputScheme");
+            foreach (string guid in guids)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                InputScheme scheme = AssetDatabase.LoadAssetAtPath<InputScheme>(assetPath);
+                
+                if (scheme != null)
+                {
+                    _inputService.AddScheme(scheme);
+                }
+            }
+
+            // Помечаем сервис как измененный для сохранения
+            EditorUtility.SetDirty(_inputService);
+            AssetDatabase.SaveAssets();
+
+            Debug.Log($"{nameof(InputScheme)} ассеты созданы и добавлены в {_inputService.name}");
         }
 #endif
     }

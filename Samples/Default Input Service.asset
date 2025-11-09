@@ -13,3 +13,10 @@ MonoBehaviour:
   m_Name: Default Input Service
   m_EditorClassIdentifier: 
   _showNotMappedWarnings: 1
+  _showSchemeNotFoundWarnings: 1
+  _inputSchemes:
+  - {fileID: 11400000, guid: c3b467f6104de024d897b9cc7dd32881, type: 2}
+  - {fileID: 11400000, guid: a5474a0154be84d46b8988089362ec13, type: 2}
+  - {fileID: 11400000, guid: 44f4121c4974b9849987fb0543e5db99, type: 2}
+  - {fileID: 11400000, guid: 6775e396fa8576740b26dedea9f9ae78, type: 2}
+  - {fileID: 11400000, guid: f79c3c8e1c1e5f5459c35327cb12235f, type: 2}
