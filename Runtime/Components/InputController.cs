@@ -1,6 +1,8 @@
+using MadeYellow.InputBus.Schemes;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using MadeYellow.InputBus.Services;
+using UnityEditor;
 
 namespace MadeYellow.InputBus.Components
 {
@@ -37,5 +39,18 @@ namespace MadeYellow.InputBus.Components
 
             DontDestroyOnLoad(gameObject);
         }
+
+#if UNITY_EDITOR
+        [ContextMenu("Create InputScheme Assets")]
+        private void BuildSchemes()
+        {
+            _playerInput = GetComponent<PlayerInput>();
+            
+            foreach (var scheme in _playerInput.actions.controlSchemes)
+            {
+                InputScheme.Build(scheme);
+            }
+        }
+#endif
     }
 }

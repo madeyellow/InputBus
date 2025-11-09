@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MadeYellow.InputBus.Schemes;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
@@ -11,7 +12,7 @@ namespace MadeYellow.InputBus.Services
     /// <summary>
     /// Сервис-шина, которая выполняет маршрутизацию <see cref="InputAction"/> к зарегистрированным для них методам-обработчикам
     /// </summary>
-    [CreateAssetMenu]
+    [CreateAssetMenu(fileName = "New Input Service", menuName = "Input Bus/Input Service")]
     public class InputService : ScriptableObject, IInputBus
     {
 #if UNITY_EDITOR
@@ -28,6 +29,9 @@ namespace MadeYellow.InputBus.Services
         private bool _showSchemeNotFoundWarnings = true;
 #endif
 
+        private List<InputScheme> _inputSchemes = new();
+        public IReadOnlyCollection<InputScheme> InputSchemes => _inputSchemes;
+        
         /// <summary>
         /// Текущая схема управления в <see cref="PlayerInput"/>
         /// </summary>
@@ -156,6 +160,18 @@ namespace MadeYellow.InputBus.Services
             return this;
         }
 
+        public void AddScheme(InputScheme inputScheme)
+        {
+            if (_inputSchemes.Contains(inputScheme))
+                return;
+            
+            _inputSchemes.Add(inputScheme);
+        }
+
+        public void RemoveScheme(InputScheme inputScheme)
+        {
+            _inputSchemes.Remove(inputScheme);
+        }
 #endregion
 
         /// <summary>
