@@ -19,7 +19,7 @@ public class MyInputController : MonoBevaiour {
   private InputService _inputService;
 
   // Ваш класс, куда нужно передать команду
-  private MyCharacterClass _character;
+  private MyCharacter _character;
 
   // И при вызове Start однократно подписать нужные методы-обработчики на `InputActions`
   private void Start() {
@@ -70,7 +70,7 @@ https://github.com/madeyellow/InputBus.git
 
 ```csharp
 using MadeYellow.InputBus.Components; // Добавляем это, чтобы использовать шину
-using UnityEngine.InputSystem; // Добавляем это, что использовать типы InputSystem
+using UnityEngine.InputSystem; // Добавляем это, чтобы использовать типы InputSystem
 
 public class MyCharacter : MonoBehaviour 
 {
