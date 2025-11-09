@@ -20,7 +20,23 @@ namespace MadeYellow.InputBus.Services
         /// </summary>
         [SerializeField]
         private bool _showNotMappedWarnings = true;
+
+        /// <summary>
+        /// Нужно ли выводить в консоль предупреждение о том, что схема не найдена (при смене схемы)
+        /// </summary>
+        [SerializeField]
+        private bool _showSchemeNotFoundWarnings = true;
 #endif
+
+        /// <summary>
+        /// Текущая схема управления в <see cref="PlayerInput"/>
+        /// </summary>
+        public InputControlScheme CurrentScheme { get; private set; }
+
+        /// <summary>
+        /// Коллекция всех схем управления. Доступна после вызова <see cref="Initilize"/>
+        /// </summary>
+        public IReadOnlyCollection<InputControlScheme> Schemes { get; private set; }
 
         /// <summary>
         /// Карта маршрутизации <see cref="InputAction"/> к методам
@@ -31,19 +47,22 @@ namespace MadeYellow.InputBus.Services
         /// Набор <see cref="InputAction"/>
         /// </summary>
         private InputActionAsset _inputActionAsset;
-        
+
         /// <summary>
         /// Контроллер инута, для которого инициализирована эта шина
         /// </summary>
         private PlayerInput _playerInput;
-        
+
         // public InputScheme CurrentScheme { get; private set; }
 #region События
 
         /// <summary>
-        /// Событие смены схемы в <see cref="PlayerInput"/>
+        /// Событие смены схемы управления в <see cref="PlayerInput"/>
         /// </summary>
-        //public event Action OnSchemeChanged;
+        /// <remarks>
+        /// В качестве аргумента указывается какая именно схема была выбрана
+        /// </remarks>
+        public event Action<InputControlScheme> OnSchemeChanged;
 
 #endregion
 
@@ -69,18 +88,20 @@ namespace MadeYellow.InputBus.Services
                 _playerInput.onControlsChanged -= SchemeChangedCallback;
                 _playerInput.onActionTriggered -= RouteAction;
             }
-            
-            _playerInput =  inputController;
+
+            _playerInput = inputController;
 
             // Подготовка карты маршрутизации
             _inputActionAsset = inputController.actions;
+
+            Schemes = _inputActionAsset.controlSchemes;
 
             _actionMap =
                 new Dictionary<InputAction, HashSet<Action<CallbackContext>>>(_inputActionAsset.Count());
 
             // Подписка на события PlayerInput (для маршрутизации)
-            _playerInput.onControlsChanged += SchemeChangedCallback;    // При смене схемы управления - попробуем обработать и оповестить об этом
-            _playerInput.onActionTriggered += RouteAction;              // При срабатывании InputAction - попробуем маршрутизировать его к методам-обработчикам
+            _playerInput.onControlsChanged += SchemeChangedCallback; // При смене схемы управления - попробуем обработать и оповестить об этом
+            _playerInput.onActionTriggered += RouteAction; // При срабатывании InputAction - попробуем маршрутизировать его к методам-обработчикам
 
             // Установка текущей схемы управления сразу после инициализации
             SchemeChangedCallback(inputController);
@@ -91,47 +112,51 @@ namespace MadeYellow.InputBus.Services
         /// </summary>
         private void SchemeChangedCallback(PlayerInput playerInput)
         {
-            // InputScheme newScheme = CurrentScheme;
-            //
-            // switch (playerInput.currentControlScheme)
-            // {
-            //     case "Keyboard&Mouse":
-            //         newScheme = InputScheme.KeyboardAndMouse;
-            //         break;
-            //
-            //     case "Gamepad":
-            //         newScheme = InputScheme.Gamepad;
-            //         break;
-            // }
-            //
-            // if (newScheme != CurrentScheme)
-            // {
-            //     CurrentScheme = newScheme;
-            //
-            //     Debug.Log("Изменена схема управления! Текущая схема: " + CurrentScheme);
-            //
-            //     OnSchemeChanged?.Invoke();
-            //
-            //     switch (CurrentScheme)
-            //     {
-            //         case InputScheme.KeyboardAndMouse:
-            //             OnSchemeChangedToKeyboard?.Invoke();
-            //             break;
-            //         case InputScheme.Gamepad:
-            //             OnSchemeChangedToGamepad?.Invoke();
-            //             break;
-            //     }
-            // }
+            var newScheme = FindScheme(playerInput.currentControlScheme);
+
+            if (newScheme == null)
+            {
+#if UNITY_EDITOR
+                if (_showSchemeNotFoundWarnings)
+                    Debug.LogWarning($"Схема управления '{playerInput.currentControlScheme}' не найдена среди схем управления инициализированного ассета.");
+#endif
+                return;
+            }
+
+            // Если схема не изменилась - не публикуем событие
+            if (CurrentScheme == newScheme)
+                return;
+
+            // Запоминаем новую схему и публикуем событие
+            CurrentScheme = newScheme.Value;
+
+            OnSchemeChanged?.Invoke(CurrentScheme);
+        }
+
+        /// <summary>
+        /// Найти схему управления по её имени
+        /// </summary>
+        private InputControlScheme? FindScheme(string schemeName)
+        {
+            foreach (var scheme in Schemes)
+            {
+                if (scheme.name.Equals(schemeName))
+                    return scheme;
+            }
+
+            return null;
         }
 
 #region API
+
         public InputService Subscribe(string inputActionName, Action<CallbackContext> callback)
         {
             SubscribeHandle(inputActionName, callback);
 
             return this;
-        } 
-  #endregion
+        }
+
+#endregion
 
         /// <summary>
         /// Логика подписки метода-обработчика на <see cref="InputAction"/>
@@ -141,11 +166,11 @@ namespace MadeYellow.InputBus.Services
             // Убедимся, что предоставлено название метода
             if (string.IsNullOrWhiteSpace(inputActionName))
                 throw new ArgumentNullException(nameof(inputActionName));
-            
+
             // Убедимся, что предоставлен callback для маршрутизации
             if (callback == null)
                 throw new ArgumentNullException(nameof(callback));
-            
+
             // Найдём в _inputActionAsset InputAction с нужным названием
             var action = _inputActionAsset.FindAction(inputActionName);
 
@@ -155,10 +180,10 @@ namespace MadeYellow.InputBus.Services
                 if (!_actionMap.TryGetValue(action, out var callbacks))
                 {
                     callbacks = new HashSet<Action<CallbackContext>>();
-                    
+
                     _actionMap[action] = callbacks;
                 }
-                
+
                 callbacks.Add(callback);
             }
 #if UNITY_EDITOR
@@ -183,7 +208,7 @@ namespace MadeYellow.InputBus.Services
                 // Гарантируется, что:
                 // 1. callbacks не будет null
                 // 2. Ни один из элементов callbacks не будет null
-                
+
                 foreach (var callback in callbacks)
                     callback.Invoke(context);
             }
