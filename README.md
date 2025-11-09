@@ -61,6 +61,8 @@ https://github.com/madeyellow/InputBus.git
 
 ![Установка компонентов системы](https://github.com/madeyellow/InputBus/blob/main/Samples/Images/how-to-set-components.jpg)
 
+Нажмите на кнопку **"Сгенерировать Input Scheme"**. Делайте это каждый раз, когда в `InputActionsAsset` добавляется новая схема.
+
 Всё настроено и готов к работе! Далее рассмотрим как настроить маршрутизацию инпута и вашего метода-обработчика.
 
 ## Шаг 2. Реализация метода-обработчика
