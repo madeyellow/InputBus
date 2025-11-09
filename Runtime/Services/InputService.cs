@@ -42,10 +42,10 @@ namespace MadeYellow.InputBus.Services
         public InputScheme CurrentScheme { get; private set; }
 
         /// <summary>
-        /// Карта маршрутизации <see cref="InputAction"/> к методам
+        /// Маршрутизатор, строящий карту маппингов <see cref="InputAction"/> и маршрутизирует их к методам-обработчикам
         /// </summary>
-        private Dictionary<InputAction, HashSet<Action<CallbackContext>>> _actionMap;
-
+        InputRouter _router;
+        
         /// <summary>
         /// Набор <see cref="InputAction"/>
         /// </summary>
@@ -55,6 +55,7 @@ namespace MadeYellow.InputBus.Services
         /// Контроллер инута, для которого инициализирована эта шина
         /// </summary>
         private PlayerInput _playerInput;
+        
 #region События
 
         /// <summary>
@@ -95,9 +96,8 @@ namespace MadeYellow.InputBus.Services
             // Подготовка карты маршрутизации
             _inputActionAsset = inputController.actions;
 
-            _actionMap =
-                new Dictionary<InputAction, HashSet<Action<CallbackContext>>>(_inputActionAsset.Count());
-
+            _router = new InputRouter(_inputActionAsset, _inputSchemes);
+            
             // Подписка на события PlayerInput (для маршрутизации)
             _playerInput.onControlsChanged += SchemeChangedCallback; // При смене схемы управления - попробуем обработать и оповестить об этом
             _playerInput.onActionTriggered += RouteAction; // При срабатывании InputAction - попробуем маршрутизировать его к методам-обработчикам
@@ -195,15 +195,7 @@ namespace MadeYellow.InputBus.Services
 
             if (action != null)
             {
-                // Если этот InputAction ещё не добавлен в карту
-                if (!_actionMap.TryGetValue(action, out var callbacks))
-                {
-                    callbacks = new HashSet<Action<CallbackContext>>();
-
-                    _actionMap[action] = callbacks;
-                }
-
-                callbacks.Add(callback);
+                _router.Append(action, callback, limitWithSchemes);
             }
 #if UNITY_EDITOR
             else
@@ -219,24 +211,7 @@ namespace MadeYellow.InputBus.Services
         /// </summary>
         private void RouteAction(CallbackContext context)
         {
-            InputAction action = context.action;
-
-            // Если для этого метода есть потребители
-            if (_actionMap.TryGetValue(action, out var callbacks))
-            {
-                // Гарантируется, что:
-                // 1. callbacks не будет null
-                // 2. Ни один из элементов callbacks не будет null
-
-                foreach (var callback in callbacks)
-                    callback.Invoke(context);
-            }
-#if UNITY_EDITOR
-            else if (_showNotMappedWarnings)
-            {
-                Debug.LogWarning($"Не удалось маршрутизировать действие '{action.name}', так как ни один метод не подписан на него");
-            }
-#endif
+            _router.RouteAction(context, CurrentScheme);
         }
     }
 }
