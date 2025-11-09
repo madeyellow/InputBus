@@ -13,7 +13,7 @@ namespace MadeYellow.InputBus.Services
     /// Сервис-шина, которая выполняет маршрутизацию <see cref="InputAction"/> к зарегистрированным для них методам-обработчикам
     /// </summary>
     [CreateAssetMenu(fileName = "New Input Service", menuName = "Input Bus/Input Service")]
-    public class InputService : ScriptableObject, IInputBus
+    public class InputService : ScriptableObject
     {
 #if UNITY_EDITOR
         /// <summary>
@@ -147,10 +147,18 @@ namespace MadeYellow.InputBus.Services
         }
 
 #region API
-
-        public InputService Subscribe(string inputActionName, Action<CallbackContext> callback)
+        /// <summary>
+        /// Добавить метод, который должен быть выполнен при срабатывании определённого <see cref="InputAction"/>. Ожидается, что это будет <see cref="InputAction"/> с указанным названием
+        /// </summary>
+        /// <param name="inputActionName">Название <see cref="InputAction"/>, при срабатывании которого нужно вызвать функцию-обработчик</param>
+        /// <param name="callback">Метод-обработчик <see cref="InputAction"/></param>
+        /// <param name="limitWithSchemes">Список <see cref="InputScheme"/> для которых будет вызываться этот метод. Оставьте поле пустым, если хотите выполнять метод для любой схемы</param>
+        /// <returns>
+        /// Возвращает эту шину, чтобы выстраивать цепочку вызовов
+        /// </returns>
+        public InputService Subscribe(string inputActionName, Action<CallbackContext> callback, params InputScheme[] limitWithSchemes)
         {
-            SubscribeHandle(inputActionName, callback);
+            SubscribeHandle(inputActionName, callback, limitWithSchemes);
 
             return this;
         }
@@ -172,7 +180,7 @@ namespace MadeYellow.InputBus.Services
         /// <summary>
         /// Логика подписки метода-обработчика на <see cref="InputAction"/>
         /// </summary>
-        private void SubscribeHandle(string inputActionName, Action<CallbackContext> callback)
+        private void SubscribeHandle(string inputActionName, Action<CallbackContext> callback, IEnumerable<InputScheme> limitWithSchemes)
         {
             // Убедимся, что предоставлено название метода
             if (string.IsNullOrWhiteSpace(inputActionName))
