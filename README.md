@@ -55,11 +55,11 @@ https://github.com/madeyellow/InputBus.git
 ## Шаг 1. Настройка шины
 В окне **Project** где-нибудь в папке **Assets** нажнимте *правой кнопкой мышки* и при помощи комадны **Create > Input Bus > Input Service** создайте новую шину для работы с инпутом игрока.
 
-![Установка компонентов системы. Просто добавьте компонент InputController к тому GameObject где уже имеется PlayerInput](https://github.com/madeyellow/InputBus/blob/main/Samples/how-to-create-input-bus.jpg)
+![Создание шины интупа](https://github.com/madeyellow/InputBus/blob/main/Samples/Images/how-to-create-input-bus.jpg)
 
 Добавьте к GameObject в котором располагается компонент `PlayerInput` компонент `InputController` из этого пакета. Укажите в поле **Input Service** созданную вами шину.
 
-![Установка компонентов системы. Просто добавьте компонент InputController к тому GameObject где уже имеется PlayerInput](https://github.com/madeyellow/InputBus/blob/main/Samples/how-to-set-components.jpg)
+![Установка компонентов системы](https://github.com/madeyellow/InputBus/blob/main/Samples/Images/how-to-set-components.jpg)
 
 Всё настроено и готов к работе! Далее рассмотрим как настроить маршрутизацию инпута и вашего метода-обработчика.
 
