@@ -1,3 +1,4 @@
+using System;
 using MadeYellow.InputBus.Schemes;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,13 +14,20 @@ namespace MadeYellow.InputBus.Components
     public class InputController : MonoBehaviour
     {
         /// <summary>
-        /// Через этот сервис регистрируются и маршрутизируются команды
+        /// Сервис-шина для маршрутизации <see cref="InputAction"/> к методам обработчикам
         /// </summary>
+        public InputService InputService => _inputService;
+
         [SerializeField]
         private InputService _inputService;
-
+       
         private PlayerInput _playerInput;
 
+        /// <summary>
+        /// Событие инициализации <see cref="InputService"/>
+        /// </summary>
+        public event Action OnInitialized;
+        
         private void Awake()
         {
             if (_inputService is null)
@@ -34,10 +42,11 @@ namespace MadeYellow.InputBus.Components
             
             // Считать PlayerInput и передать его в сервис-шину для инициализации
             _playerInput = GetComponent<PlayerInput>();
-
+            _playerInput.notificationBehavior = PlayerNotifications.InvokeCSharpEvents; // Автоматически установить поведение на InvokeCSharpEvents
+            
             _inputService.Initilize(_playerInput);
 
-            DontDestroyOnLoad(gameObject);
+            OnInitialized?.Invoke();
         }
 
 #if UNITY_EDITOR
