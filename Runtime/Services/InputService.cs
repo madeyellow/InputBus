@@ -127,14 +127,16 @@ namespace MadeYellow.InputBus.Services
 #region API
         public InputService Subscribe(string inputActionName, Action<CallbackContext> callback)
         {
-            return SubscribeHandle(inputActionName, callback);
+            SubscribeHandle(inputActionName, callback);
+
+            return this;
         } 
   #endregion
 
         /// <summary>
         /// Логика подписки метода-обработчика на <see cref="InputAction"/>
         /// </summary>
-        private InputService SubscribeHandle(string inputActionName, Action<CallbackContext> callback)
+        private void SubscribeHandle(string inputActionName, Action<CallbackContext> callback)
         {
             // Убедимся, что предоставлено название метода
             if (string.IsNullOrWhiteSpace(inputActionName))
@@ -165,9 +167,6 @@ namespace MadeYellow.InputBus.Services
                 Debug.LogError($"Действие '{inputActionName}' не найдено в {nameof(InputActionAsset)}.");
             }
 #endif
-
-            // Вернём этот объект, чтобы вызовы Subscribe можно было указывать цепочкой
-            return this;
         }
 
 
